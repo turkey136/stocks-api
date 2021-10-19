@@ -22,3 +22,13 @@ class Stock(models.Model):
   name = models.TextField(max_length = 100)
   industry= models.TextField(max_length = 500)
   updated_at = models.DateTimeField(auto_now = True)
+
+class DailyStock(models.Model):
+  stock = models.ForeignKey(Stock, on_delete = models.CASCADE, related_name = 'daily_stocks')
+  date = models.DateField(db_index = True)
+  open = models.FloatField()
+  close = models.FloatField()
+  low = models.FloatField()
+  high = models.FloatField()
+  amount_of_change = models.FloatField(null = True)
+  updated_at = models.DateTimeField(auto_now = True)
