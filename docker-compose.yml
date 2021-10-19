@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  api:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8001
+    volumes:
+      - .:/code
+    ports:
+      - "8001:8001"
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - database:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+volumes:
+  database:
+    driver: local
