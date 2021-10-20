@@ -21,12 +21,11 @@ class DailyStockModule():
         print('save daily stock. stock: %s, date: %s' %(stock.code, date))
 
   def calculation_daily_stock(self, daily_stock, stock, date):
-    day_before_yesterday_daily_stock = DailyStock.objects.filter(stock=stock,date__lt=date).order_by('-date')[:1]
-    if day_before_yesterday_daily_stock.exists():
-      daily_stock.amount_of_change=daily_stock.close - day_before_yesterday_daily_stock[0].close
-
-    # calculation
-    daily_stock.rsi = self.calculation_rsi(stock, date)
+    daily_stock.amount_of_change= self.calculate_amount_of_change(daily_stock, stock, date)
+    daily_stock.rsi = self.calculate_rsi(stock, date)
+    daily_stock.sma25 = self.calculate_sma(stock, date, 25)
+    daily_stock.sma5 = self.calculate_sma(stock, date, 5)
+    daily_stock.sma75 = self.calculate_sma(stock, date, 75)
 
     return daily_stock
 
@@ -38,11 +37,25 @@ class DailyStockModule():
       daily_stock = daily_stock[0]
     return daily_stock
 
-  def calculation_rsi(self, stock, date):
+  def calculate_rsi(self, stock, date):
     old_stocks = DailyStock.objects.filter(stock=stock, amount_of_change__isnull=False, date__lt=date).order_by('-date')[:14]
     if old_stocks.count() == 14:
       over_zeros = np.sum([i['amount_of_change'] for i in old_stocks.values() if i['amount_of_change'] > 0])
       under_zeros = np.sum([i['amount_of_change'] for i in old_stocks.values() if i['amount_of_change'] < 0]) * -1
       return over_zeros / (under_zeros + over_zeros) * 100
+    else:
+      return None
+
+  def calculate_sma(self, stock, date, count):
+    old_stocks = DailyStock.objects.filter(stock=stock, amount_of_change__isnull=False, date__lte=date).order_by('-date')[:count]
+    if old_stocks.count() == count:
+      return np.average([i['close'] for i in old_stocks.values()])
+    else:
+      return None
+
+  def calculate_amount_of_change(self, daily_stock, stock, date):
+    day_before_yesterday_daily_stock = DailyStock.objects.filter(stock=stock,date__lt=date).order_by('-date')[:1]
+    if day_before_yesterday_daily_stock.exists():
+      return daily_stock.close - day_before_yesterday_daily_stock[0].close
     else:
       return None

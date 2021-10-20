@@ -30,5 +30,9 @@ class DailyStock(models.Model):
   close = models.FloatField()
   low = models.FloatField()
   high = models.FloatField()
-  amount_of_change = models.FloatField(null = True)
+  amount_of_change = models.FloatField(null = True) # 前日終値 - 当日終値
+  rsi = models.FloatField(null = True) # RSI相対力指数
+  sma5 = models.FloatField(null = True) # 単純移動平均5日
+  sma25 = models.FloatField(null = True) # 単純移動平均25日
+  sma75 = models.FloatField(null = True) # 単純移動平均75日
   updated_at = models.DateTimeField(auto_now = True)

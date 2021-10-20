@@ -6,7 +6,8 @@ COPY requirements.txt /code/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN pip install django-extensions \
-                django-environ
+                django-environ \
+                pandas-datareader
 
 COPY . /code/
 
