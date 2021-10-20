@@ -20,6 +20,21 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
       - ./initdb:/docker-entrypoint-initdb.d
+  
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "8002:8080"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8003:8080"
+    volumes:
+      - ./doc/openapi/openapi.yml:/openapi.yaml
+    environment:
+      SWAGGER_JSON: /openapi.yaml
 volumes:
   database:
     driver: local
