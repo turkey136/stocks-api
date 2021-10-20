@@ -26,11 +26,18 @@
 * seed データの投入
   * `$ docker-compose rum --rm api python3 manage.py runscript seed`
 * サーバの起動
-  * `$ docker-compose up`
+  * `$ docker-compose up api`
 * スクリプトの実行
   * 前日の株価取得
     * `$ docker-compose rum --rm api python3 manage.py runscript daily_stock_crawl`
 
-# API
-
 # API ドキュメント
+* サーバ起動
+  * ドキュメント閲覧
+    * `$ docker-compose up swagger-ui`
+  * エディタ
+    * `$ docker-compose up swagger-editor`
+* 閲覧
+  * http://localhost:8003
+* エディタ
+  * http://localhost:8002
