@@ -8,7 +8,7 @@ from scripts.modules import DailyStockModule
 # dc run --rm api python3 manage.py runscript daily_stock_crawl
 
 date_format = "%Y-%m-%d"
-five_day_ago = (datetime.today() - timedelta(days=30)).strftime(date_format)
+day_ago = (datetime.today() - timedelta(days=30)).strftime(date_format)
 
 # 1銘柄単位でやると時間がかかる ＆ 外部システムから接続切られるので100銘柄単位で取得する
 def run():
@@ -30,7 +30,7 @@ def create_daily_stock(stocks):
 
 def fetch_daily_data(stocks):
   symbols =  [stock.code for stock in stocks]
-  return web.DataReader(symbols, 'yahoo', five_day_ago)
+  return web.DataReader(symbols, 'yahoo', day_ago)
 
 def each_slice(arr, n):
   return [arr[i:i + n] for i in range(0, len(arr), n)]
